@@ -91,3 +91,68 @@ var detectCapitalUse = function(word) {
     return CAPITAL_REG.test(word);
   };
  */
+
+/****** 506. Relative Ranks ******/
+/**
+ * [findRelativeRanks 将前三名换成奖牌，将其他分数转换成名次，目测该方法在数组长度小时是可以实现的，但在目前 10000 的限制下，显示时间超时]
+ * @param {number[]} nums
+ * @return {string[]}
+ */
+var findRelativeRanks = function(nums) {
+  var obj = {};
+  var arr = JSON.parse(JSON.stringify(nums)); // 深拷贝
+  arr.sort(function(a, b) {return b - a;}); // a > b 的排序存在问题
+  arr.forEach(function(value, index) {
+    if (index === 0) {obj[value] = 'Gold Medal'; return;}
+    if (index === 1) {obj[value] = 'Silver Medal'; return;}
+    if (index === 2) {obj[value] = 'Bronze Medal'; return;}
+    obj[value] = String(index+1);
+  });
+  return nums.map(function(value) {
+    var v;
+    // 可能是这一步导致了算法复杂度升高，导致运算时间超时
+    for (var key in obj) {
+      // 类型转换在这里是必要的，否则将会是 number 和 string 的判断
+      if (String(value) === key) {
+        v = obj[key];
+      }
+    }
+    return v;
+  });
+};
+
+/**
+ * [findRelativeRanks 思路更清晰]
+ */
+var findRelativeRanks = function(nums) {
+  var arr = [];
+  // 保存索引值，成绩，及排名的各对象的数组
+  nums.forEach(function(value, index){
+    arr.push({
+      index: index,
+      value: value,
+      rank: null
+    });
+  });
+  // 按成绩进行排序
+  arr.sort(function(a, b) {return b.value - a.value;});
+  // 获取排名
+  arr.map(function(value, index) {
+    if (index === 0) {value.rank = 'Gold Medal'; return;}
+    if (index === 1) {value.rank = 'Silver Medal'; return;}
+    if (index === 2) {value.rank = 'Bronze Medal'; return;}
+    value.rank = index + 1 + '';
+  });
+  // 按索引值从小打大重新排名
+  arr.sort(function(a, b){return a.index - b.index;});
+  // 直接修改数组并返回
+  return arr.map(function(value){
+    return value.rank;
+  });
+  // 保存结果
+  // var res = [];
+  // arr.forEach(function(value) {
+  //   res.push(value.rank);
+  // });
+  // return res;
+};
