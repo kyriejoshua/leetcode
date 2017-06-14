@@ -156,3 +156,39 @@ var findRelativeRanks = function(nums) {
   // });
   // return res;
 };
+
+/****** 501. Base 7 ******/
+/**
+ * [convertToBase7 下列代码可以实现，但显然并不考验算法……]
+ * @param {number} num
+ * @return {string}
+ */
+var convertToBase7 = function(num) {
+  num.toString(7);
+};
+
+// error
+var convertToBase7 = function(num) {
+  var res = arguments[1] || [];
+  var ceil = Math.floor(num/7);
+  res.push(num % 7);
+  // 这里不知为何 return 不出去
+  if (ceil === 0) {return res.reverse().join('');}
+  convertToBase7(ceil, res);
+};
+
+// correct
+var convertToBase7 = function(num) {
+  if (num === 0) {return '0';}
+  var res = [];
+  var base = 7;
+  var prefix = num < 0 ? '-' : '';
+  // 取绝对值
+  num = Math.abs(num);
+  // 当 num 不为 0 时，反复调用
+  while (num) {
+    res.push(num % base);
+    num = Math.floor(num / base); // num = ~~(num/base) 同效果
+  }
+  return prefix + res.reverse().join('');
+};
