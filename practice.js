@@ -157,7 +157,7 @@ var findRelativeRanks = function(nums) {
   // return res;
 };
 
-/****** 501. Base 7 ******/
+/****** 504. Base 7 ******/
 /**
  * [convertToBase7 下列代码可以实现，但显然并不考验算法……]
  * @param {number} num
@@ -192,3 +192,65 @@ var convertToBase7 = function(num) {
   }
   return prefix + res.reverse().join('');
 };
+
+/****** 501. Find Mode in Binary Search Tree ******/
+//  lack
+
+/****** 500. Keyboard Row ******/
+/**
+ * [findWords 查找由键盘里同一行字母组成的字母]
+ * @param {string[]} words
+ * @return {string[]}
+ */
+var findWords = function(words) {
+  var ROW_EXP1 = /^[QWERTYUIOP]+$/;
+  var ROW_EXP2 = /^[ASDFGHJKL]+$/;
+  var ROW_EXP3 = /^[ZXCVBNM]+$/;
+  // 用 forEach 匹配添加数组同理
+  return words.filter(function(value) {
+    return ROW_EXP1.test(value.toUpperCase()) || ROW_EXP2.test(value.toUpperCase()) || ROW_EXP3.test(value.toUpperCase());
+  });
+};
+
+// 更加简化
+var findWords = function(words) {
+  // 必须从头到尾都匹配，所以这里不行
+  // var ROW_EXP = /^([QWERTYUIOP]+)|([ASDFGHJKL]+)|([ZXCVBNM]+)$/;
+  var ROW_EXP = /(^([QWERTYUIOP]+)$)|(^([ASDFGHJKL]+)$)|(^([ZXCVBNM]+)$)/;
+  return words.filter(function(value) {
+    return ROW_EXP.test(value.toUpperCase());
+  });
+};
+
+/* 个人认为该答案过于啰嗦, 三重遍历
+  var findWords = function(words) {
+    let keys = [
+      'qwertyuiop',
+      'asdfghjkl',
+      'zxcvbnm'
+    ];
+
+    let ans = [];
+
+    words.forEach(function(item) {
+      let s = new Set();
+      let word = item.toLowerCase();
+
+      // 对单词的每个字母操作
+      for (let letter of word) {
+        for (let i = 0; i < 3; i++)
+          if (keys[i].indexOf(letter) !== -1) {
+            // 加当前行的值, 如果都在一行内，则最终保存的只有一个
+            s.add(i);
+            break;
+          }
+      }
+
+      // 如果都在一行内，仅保留一行的值，PS：没括号？
+      if (s.size === 1)
+        ans.push(item);
+    });
+
+    return ans;
+  };
+*/
