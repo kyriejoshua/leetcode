@@ -254,3 +254,73 @@ var findWords = function(words) {
     return ans;
   };
 */
+
+/****** 496. Next Greater Element I ******/
+/**
+ * [nextGreaterElement 子数组获取到在父数组中的离右侧最近的更大的值]
+ * @param {number[]} findNums
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var nextGreaterElement = function(findNums, nums) {
+  return findNums.map(function(num) {
+    var currentValue = -1; // 保存的数组值
+    var isSearching = false; // 用以标识是否开启查找循环
+    nums.forEach(function(value) {
+      // 循坏查找还未开始，先找到父数组中对应的值
+      if (num === value) {isSearching = true;return;}
+      if (!isSearching) {return;}
+      // 获取到最近的最大值，获取到后便停止循环
+      if (num < value) {
+        currentValue = value;
+        isSearching = false;
+        return;
+      }
+    });
+    return currentValue;
+  });
+};
+
+// 用 ES6 实现
+var nextGreaterElement = function (findNums, nums) {
+  return findNums.map((num) => {
+    let res, currentIndex, tempArr;
+    // 获取子数组在父数组的索引值
+    currentIndex = nums.findIndex((value) => {
+      return num === value;
+    });
+    // 截取父数组的索引值之后的部分进行查找
+    tempArr = nums.slice(currentIndex);
+    res = tempArr.find((value) => {
+      return num < value;
+    });
+    // 未查找到时是返回 undefined
+    return res || -1;
+  });
+};
+
+/* 都用 ES6 了为啥不上 Array api
+  var nextGreaterElement = function (findNums, nums) {
+    let ans = [];
+    let len = nums.length;
+
+    findNums.forEach((item) => {
+      let pos = nums.indexOf(item);
+      let hasNextGreatElement = false;
+
+      for (let i = pos + 1; i < len; i++) {
+        if (nums[i] > item) {
+          ans.push(nums[i]);
+          hasNextGreatElement = true;
+          break;
+        }
+      }
+
+      if (!hasNextGreatElement) {
+        ans.push(-1);
+      }
+
+      return ans;
+    })
+  }
+*/
