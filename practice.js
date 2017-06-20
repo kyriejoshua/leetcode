@@ -324,3 +324,194 @@ var nextGreaterElement = function (findNums, nums) {
     })
   }
 */
+
+/****** 492. Construct the Rectangle ******/
+/**
+ * [constructRectangle description]
+ * @param {number} area
+ * @return {number[]}
+ */
+// error 超时
+var constructRectangle = function(area) {
+  if (area === 1) {return [1, 1];}
+  var L, W, min;
+  var half = Math.floor(area/2);
+  var arr = [];
+  var tempArr = [];
+  for (var i = 0; i <= half; i++) { // W
+    for (var j = area; j >= i; j--) { // L
+      // 获取所有乘积为 area 的宽高值，并保存
+      if ((i * j) === area) {
+        arr.push([i, j]);
+      }
+    }
+  }
+  // 将所有差值保存在数组里
+  arr.forEach(function(item) {
+    tempArr.push(item[1]-item[0]);
+  });
+  // 获取相差最小的值
+  min = Math.min.apply(null,tempArr);
+  arr.forEach(function(item) {
+    if ((item[1] - item[0]) === min) {
+      L = item[1];
+      W = item[0];
+    }
+  });
+  return [L, W];
+};
+
+// error 超时
+var constructRectangle = function(area) {
+  if (area === 1) {return [1, 1];}
+  var min = area;
+  var half = Math.floor(area/2);
+  var arr = [];
+  for (var i = 1; i <= half; i++) { // W
+    for (var j = area; j >= i; j--) { // L
+      // 获取所有乘积为 area 的宽高值，并比较差值后保存
+      if ((i * j) === area) {
+        if ((j - i) < min) {
+          min = j - i;
+          arr = [j, i];
+        }
+      }
+    }
+  }
+  return arr;
+};
+
+// error 超时
+var constructRectangle = function(area) {
+  if (area === 1) {return [1, 1];}
+  var min = area;
+  var half = Math.floor(area/2);
+  var arr = [];
+  for (var i = 1; i <= half; i++) { // W
+    var isSatified = false;
+    for (var j = area; j >= i; j--) { // L
+      // 获取所有乘积为 area 的宽高值，并比较差值后保存
+      if ((i * j) !== area) {
+        continue; // break;
+      }
+      if ((j - i) > min) {
+        continue; // break;
+      }
+      min = j - i;
+      arr = [j, i];
+      isSatified = true;
+      break;
+    }
+    if (min === 0) {
+      break;
+    }
+    if (isSatified) {
+      continue;
+    }
+  }
+  return arr;
+};
+
+// correct 完全忘了 sqrt 这个 api 了。
+var constructRectangle = function(area) {
+  var half = Math.ceil(Math.sqrt(area));
+  for ( ; ; half++) { // 学习这个写法
+    if (area % half === 0)
+      return [half, area / half];
+  }
+};
+
+/****** 485. Max Consecutive Ones ******/
+/**
+ * [findMaxConsecutiveOnes 找到最多连续的1的连续数]
+ * @param {number[]} nums
+ * @return {number}
+ */
+// 可以实现但太啰嗦
+var findMaxConsecutiveOnes = function(nums) {
+  // 数组长度为 1 的情况
+  if (nums.length === 1) {
+    return nums[0];
+  }
+  var recent = 0;
+  var count = 0;
+  var arr = [];
+  for (var i = 0; i < nums.length; i++) {
+    // 遇到 0 时都保存并重置
+    if (nums[i] === 0) {
+      arr.push(count);
+      recent = 0;
+      count = 0;
+      continue;
+    }
+    // 如果是连续的 1
+    if (nums[i] === recent) {
+      count++;
+      // 如果 1 恰好是最后
+      if (i === nums.length -1) {
+        arr.push(count);
+      }
+      continue;
+    }
+    // 首次遇见 1
+    recent = 1;
+    count = 1;
+    // 存在有且仅有 1 的情况
+    arr.push(count);
+  }
+  return Math.max.apply(null, arr);
+};
+
+var findMaxConsecutiveOnes = function(nums) {
+  var ans = 0;
+  var sum = 0;
+  // 避免数组只有一个元素的情况
+  nums.push(0);
+  for (var item of nums) {
+    // 如果是 1
+    if (item) {
+      sum++;
+    } else {
+      // 获取连续的最大值并重置
+      ans = Math.max(ans, sum);
+      sum = 0;
+    }
+  }
+  return ans;
+};
+
+/****** 476. Number Complement ******/
+/**
+ * [findComplement description]
+ * @param {number} num
+ * @return {number}
+ */
+var findComplement = function(num) {
+  // 转为 2 进制
+  var binary = num.toString(2);
+  var arr = binary.split('');
+  var res = arr.map(function(value) {
+    // 字符串类型转化为数字类型，且取反
+    return Number(value) ? 0 : 1;
+  });
+  // 再转为 10 进制，这里不需要再用 Number,否则会影响首位为 0 的情况
+  // toString(10) 和 toString() 是一样的，具有同等效果
+  return parseInt(res.join(''), 2);
+};
+
+/* 没看懂，后续补上
+  var findComplement = function(num) {
+    let ans = 0;
+    let add = 1;
+
+    while (num) {
+      if (!(num & 1)) {
+        ans += add;
+      }
+      num >>= 1;
+      add <<= 1;
+    }
+
+    return ans;
+  }
+*/
