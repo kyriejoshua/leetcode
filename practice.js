@@ -515,3 +515,66 @@ var findComplement = function(num) {
     return ans;
   }
 */
+
+/****** 475. Heaters ******/
+/**
+ * [findRadius description]
+ * @param {number[]} houses
+ * @param {number[]} heaters
+ * @return {number}
+ */
+// error
+var findRadius = function(houses, heaters) {
+  var previous = 0;
+  var radius = 0;
+  for (var i = 1; i < houses[houses.length-1]; i++) {
+    if (heaters.length === 1) {
+      if (heaters[0] === i) {
+        radius = Math.max(i, houses.length - 1 - i - 1);
+      }
+      return;
+    }
+    heaters.forEach(function(heater) {
+      if (heater === i) {
+        radius = Math.max(radius, (i - previous)/2);
+        previous = i;
+      }
+    });
+  }
+  return radius;
+};
+
+// correct 难度高一点，理解不是很好
+var findRadius = function(houses, heaters) {
+  // 排序
+  houses.sort(function(a, b) {return a - b;});
+  heaters.sort(function(a, b) {return a - b;});
+
+  var housesLen = houses.length;
+  var heatersLen = heaters.length;
+  var j = 0;
+  var ans = 0;
+
+  for (var i = 0; i < housesLen; i++) {
+    var pos = houses[i];
+    var minDis = Infinity;
+
+    // 取得最右处加热器的位置？
+    while(heaters[j] < pos && j < heatersLen - 1) {
+      j++;
+    }
+
+    // 和左边的房子位置比较
+    j > 0 && (minDis = Math.min(minDis, Math.abs(pos - heaters[j-1])));
+    // 和右边的房子位置比较
+    minDis = Math.min(minDis, Math.abs(heaters[j] - pos));
+
+    // 和上一轮的循环比较
+    ans = Math.max(ans, minDis);
+
+    // 往左递减？
+    j > 0 && j--;
+  }
+
+  return ans;
+};
