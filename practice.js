@@ -649,11 +649,26 @@ var repeatedSubstringPattern = function(s) {
   return false;
 };
 
+// correct 改进
+var repeatedSubstringPattern = function(s) {
+  var len = s.length;
+  for (var i = 2; i <= len; i++) {
+    if (len % i) continue;
+    var base = len / i;
+    var temp = s.substr(0, base);
+    var REPEATSTR_REG = new RegExp('^(' + temp + '){2,}$');
+    if (REPEATSTR_REG.test(s)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 // correct 不断拆分的思路
 var repeatedSubstringPattern = function(s) {
   let len = s.length;
 
-  // 循环的写法
+  // 循环的写法，循环写在 loop 里
   loop:
   // 字符串依据长度分成多个组
   for (let i = 2; i <= len; i++) {
