@@ -578,3 +578,101 @@ var findRadius = function(houses, heaters) {
 
   return ans;
 };
+
+/****** 463. Island Perimeter ******/
+// lack
+
+/****** 461. Hamming Distance ******/
+/**
+ * [hammingDistance description]
+ * @param {number} x
+ * @param {number} y
+ * @return {number}
+ */
+var hammingDistance = function(x, y) {
+  var str1 = x.toString(2).split('');
+  var str2 = y.toString(2).split('');
+  var diff = 0;
+  var temp = Math.abs(str1.length - str2.length);
+  // 位数等同
+  if (str1.length > str2.length) {
+    for (var i = 0; i < temp; i++) {
+      str2.unshift(0);
+    }
+  } else {
+    for (var j = 0; j < temp; j++) {
+      str1.unshift(0);
+    }
+  }
+  str1.forEach(function(value, index) {
+    str2.forEach(function(item, num) {
+      if (index !== num) {
+        return;
+      }
+      if (Number(value) === Number(item)) {
+        return;
+      }
+      diff++;
+    });
+  });
+  return diff;
+};
+
+/* 待理解
+  var hammingDistance = function(x, y) {
+    let ans = 0;
+    while (x || y) {
+      ans += (x & 1) ^ (y & 1);
+      x >>= 1;
+      y >>= 1;
+    }
+    return ans;
+  }
+ */
+
+/****** 459. Repeated Substring Pattern ******/
+/**
+ * [repeatedSubstringPattern description]
+ * @param {string} s
+ * @return {boolean}
+ */
+// 可以解决，但超时，遍历上万长度的字符串时耗费时间很长
+var repeatedSubstringPattern = function(s) {
+  var len = Math.ceil(s.length/2);
+  for (var i = 0; i <= len; i++) {
+    var temp = s.substr(0, i);
+    var REPEATSTR_REG = new RegExp('^(' + temp + '){2,}$');
+    if (REPEATSTR_REG.test(s)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// correct 不断拆分的思路
+var repeatedSubstringPattern = function(s) {
+  let len = s.length;
+
+  // 循环的写法
+  loop:
+  // 字符串依据长度分成多个组
+  for (let i = 2; i <= len; i++) {
+    // 如果不是整除，继续寻找可以整除的数
+    if (len % i) continue;
+
+    // 可以分成的组数
+    let partLen = len / i;
+    // 每一组的部分
+    let base = s.substr(0, partLen);
+
+    // 按数截取相同长度的组，如果内容不同，则继续寻找
+    for (let j = partLen; j < len; j += partLen) {
+      let sub = s.substr(j, partLen);
+      if (base !== sub) continue loop;
+    }
+
+    return true;
+  }
+
+  return false;
+};
