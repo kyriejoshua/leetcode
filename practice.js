@@ -691,3 +691,58 @@ var repeatedSubstringPattern = function(s) {
 
   return false;
 };
+
+/****** 455. Assign Cookies ******/
+/**
+ * [findContentChildren description]
+ * @param {number[]} g [小孩数量]
+ * @param {number[]} s [饼干🍪数量]
+ * @return {number}
+ */
+var findContentChildren = function(g, s) {
+  // a - b !!! sort 会修改原数组
+  g.sort(function(a, b) {return a - b;});
+  s.sort(function(a, b) {return a - b;});
+  var res = 0;
+  var currentIndex = -1;
+  var selected;
+  g.forEach(function(value) {
+    selected = s.find(function(item) {
+      return item >= value;
+    });
+    if (!selected) {return;}
+    currentIndex = s.indexOf(selected);
+    res++;
+    s.splice(currentIndex, 1);
+    currentIndex = -1;
+  });
+  return res;
+};
+
+/* 和自己写的大同小异
+  var findContentChildren = function(g, s) {
+    g.sort(function(a, b) {return a - b;});
+    s.sort(function(a, b) {return a - b;});
+
+    let ans = 0;
+    let sIndex = 0;
+    let sLen = s.length;
+
+    loop:
+    for (var i = 0, len = g.length; i < len; i++) {
+      let item = g[i];
+
+      for (var j = sIndex; j < sLen; j++) {
+        if (s[j] >= item) {
+          ans++;
+          // 下一个循环开始
+          sIndex = j + 1;
+          // 结束循环
+          if (sIndex === sLen) break loop;
+          break;
+        }
+      }
+    }
+    return ans;
+  }
+*/
