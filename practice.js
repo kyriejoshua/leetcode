@@ -746,3 +746,82 @@ var findContentChildren = function(g, s) {
     return ans;
   }
 */
+
+/****** 453. Minimum Moves to Equal Array Elements ******/
+/**
+ * [minMoves description]
+ * @param {number[]} nums
+ * @return {number}
+ */
+// error 会奔溃
+var minMoves = function(nums) {
+  nums.sort(function(a, b) {return a - b;});
+  var step = 0;
+  var len = nums.length;
+  var arr, max;
+  var isStop = false;
+  while (!isStop) {
+    arr = nums.map(function(value, index) {
+      if (index !== (len-1)) {
+        return ++value;
+      }
+      return value;
+    });
+    max = Math.max.apply(null, arr);
+    isStop = arr.every(function(value) {
+      return max === value;
+    });
+    arr.sort(function(a, b) {return a - b;});
+    step++;
+  }
+  return step;
+};
+
+// correct 由推荐答案优化而来
+var minMoves = function(nums) {
+  var len = nums.length;
+  var sum = 0;
+  for (var i = 0; i < len; i++) {
+    sum += nums[i];
+  }
+  var min = Math.min.apply(null, nums);
+  // x 为需要移动的次数，初始总数加上移动总数，因最后数组内的数相等，所以总是能被数组的长度整除
+  // (sum + (len - 1) * x) % len === 0
+  // 简化后可得
+  // (sum - x) % len === 0
+  // 进一步分析，假设被整除的数为 n
+  // (sum - x) / len === n
+  // (sum - x) / len = n
+  // sum - x = len * n
+  // x = sum - len * n
+  // 这里的 n 为整数，且 n 只能是数组中的最小值，否则就很可能会得出负数的结果
+  // 其实这是一道算术解答题…😂
+  return sum - len * min;
+};
+
+/* correct
+  var minMoves = function(nums) {
+    var len = nums.length;
+    var sum = 0;
+    for (var i = 0; i < len; i++) {
+      sum += nums[i]
+    }
+
+    // 找到初始数组的最小值
+    min = Math.min.apply(null, nums);
+
+    // x 为需要移动的次数，初始总数加上移动总数，总是能被数组长度整除
+    // (sum + (len - 1) * x) % len === 0
+    // 简化后可得，推荐答案只到这一步，详情请看上文
+    // (sum - x) % len === 0
+
+    for (var i = 0; ; i++) {
+      if ((sum - i) % len) {
+        continue;
+      }
+
+      // 官方答案，不知为何
+      return Math.max(sum - len * min, i);
+    }
+  };
+*/
