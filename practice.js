@@ -825,3 +825,39 @@ var minMoves = function(nums) {
     }
   };
 */
+
+/****** 448. Find All Numbers Disappeared in an Array ******/
+/**
+ * [findDisappearedNumbers description]
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+// error 超时
+var findDisappearedNumbers = function(nums) {
+  nums.sort(function(a, b) {return a - b;});
+  var arr = nums.filter(function(value, index, array) {
+    return array.indexOf(value) === index;
+  });
+  var res = [];
+  for (var i = 1; i <= nums.length; i++) {
+    if ((arr[i-1]) !== i) {
+      res.push(i);
+      arr.splice(i-1, 0, i);
+    }
+  }
+  return res;
+};
+
+// correct
+var findDisappearedNumbers = function(nums) {
+  var obj = {};
+  var res = [];
+  // 将其中的值作为对象的属性保存，避免了去重和排序这一步
+  nums.forEach(function(item) {
+    obj[item] = true;
+  });
+  for (var i = 1; i <= nums.length; i++) {
+    !(obj[i]) && (res.push(i));
+  }
+  return res;
+};
