@@ -194,7 +194,7 @@ var convertToBase7 = function(num) {
 };
 
 /****** 501. Find Mode in Binary Search Tree ******/
-//  lack
+// lack
 
 /****** 500. Keyboard Row ******/
 /**
@@ -861,3 +861,32 @@ var findDisappearedNumbers = function(nums) {
   }
   return res;
 };
+
+/****** 447. Number of Boomerangs ******/
+// lack
+
+/****** 441. Arranging Coins ******/
+/**
+ * [arrangeCoins description]
+ * @param {number} n
+ * @return {number}
+ */
+var arrangeCoins = function(n) {
+  var sum = 0;
+  for (var i = 0; ; i++) {
+    sum += i;
+    if (sum < n) {
+      continue;
+    }
+    return sum === n ? i : i - 1;
+  }
+};
+
+/* 待理解
+  var arrangeCoins = function(n) {
+    let ans = Math.sqrt(1 + 8 * n) - 1;
+    ans /= 2;
+
+    return ~~ans;
+  }
+*/
