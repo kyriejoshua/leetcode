@@ -890,3 +890,79 @@ var arrangeCoins = function(n) {
     return ~~ans;
   }
 */
+
+/****** 438. Find All Anagrams in a String ******/
+/**
+ * [findAnagrams description]
+ * @param {string} s
+ * @param {string} p
+ * @return {number[]}
+ */
+// error 超时
+var findAnagrams = function(s, p) {
+  /**
+   * [sortStr 将字符串按序排列，这步是关键]
+   * @param  {String} str [description]
+   * @return {String}     [description]
+   */
+  function sortStr(str) {
+    return str.split('').sort().join('');
+  }
+
+  var len = p.length;
+  var str = sortStr(p);
+  var res = [];
+
+  // 截取每段字符串比较并保存结果
+  for (var i = 0; i < s.length; i++) {
+    var sub = s.substr(i, len);
+    str === sortStr(sub) && res.push(i);
+  }
+
+  return res;
+};
+
+// correct 待理解 —— 比较每个字符串中字母的数量，将一段字符串字母，分成对象保存，每个属性保存编码，属性值对应出现的次数
+// 将 O(20100 * 20100) 复杂度减少为 O(20100 * 26)
+// 很开阔的思路，自己可以多尝试
+var findAnagrams = function(s, p) {
+  let len = p.length;
+  let hash = {};
+  let ans = {};
+  let ret = [];
+
+  // 生成一个对象，以键值对形式保存了每个字母的数字编码和出现次数
+  for (let i = 0, l = p.length; i < l; i++) {
+    let index = p.charCodeAt(i) - 97;
+    // 从开始0递增
+    ans[index] = ~~ans[index] + 1;
+  }
+
+  for (let i = 0, l = s.length; i < l; i++) {
+    let index = s.charCodeAt(i) - 97;
+    hash[index] = ~~hash[index] + 1;
+
+    // 在首次判断后执行，将已经过去的那一位移除
+    if (i >= len) {
+      let index = s.charCodeAt(i - len) - 97;
+      hash[index] = ~~hash[index] - 1;
+    }
+
+    // 先于上一段执行，首先开始判断是否匹配
+    if (i + 1 >= len) {
+      help() && ret.push(i - len + 1);
+    }
+  }
+
+  // 检测是否相等，每一个对应的属性值都需要相等
+  function help() {
+    for (let i = 0; i < 26; i++) {
+      if (~~hash[i] !== ~~ans[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  return ret;
+};
