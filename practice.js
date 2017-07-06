@@ -966,3 +966,48 @@ var findAnagrams = function(s, p) {
 
   return ret;
 };
+
+/****** 437. Path Sum III ******/
+// lack
+
+/****** 434. Number of Segments in a String ******/
+/**
+ * [countSegments description]
+ * @param {string} s
+ * @return {number}
+ */
+var countSegments = function(s) {
+  // 去除头尾空格
+  function trimFirstAndLast(s) {
+    return s.replace(/(^\s*)|(\s*$)/g, '');
+    // return s.replace(/^(\s*)|(\s*)$/, ''); // 错误写法
+  }
+
+  // 将中间的多个空格变为一个
+  function trimStr(str) {
+    return str.replace(/\s+/g, ' ');
+  }
+
+  var str = trimStr(trimFirstAndLast(s));
+
+  if (!str) {
+    return 0;
+  }
+
+  var arr = str.split(' ');
+  return arr.length;
+};
+
+/* 更为简洁 利用空字符串布尔值为 false 的特点
+   但执行速度没有上一段代码快，是否可以说明正则匹配比遍历循环更快？？？
+  var countSegments = function(s) {
+    var arr = s.split(' ');
+    var res = 0;
+
+    arr.forEach(function(item) {
+      item && (res++);
+    });
+
+    return res;
+  };
+*/
