@@ -1011,3 +1011,121 @@ var countSegments = function(s) {
     return res;
   };
 */
+
+/****** 422. Valid Word Square ******/
+// lack 打不开
+
+/****** 415. Add Strings ******/
+/**
+ * [addStrings description]
+ * @param {string} num1
+ * @param {string} num2
+ * @return {string}
+ */
+// error 使用 Number 转换在位数过大时会有误差
+var addStrings = function(num1, num2) {
+  return (Number(num1) + Number(num2)).toString();
+};
+
+// correct
+// 这个逻辑是最基本的加法，将每一位各自相加，如果有进位则继续向前加
+var addStrings = function(num1, num2) {
+  let [i, j] = [num1.length, num2.length];
+  let ans = '';
+  let add = 0;
+
+  i -= 1;
+  j -= 1;
+  // 将字符串拆分成一位一位
+  for ( ; i >= 0 || j >= 0; i--, j--) {
+    let a = i >= 0 ? +num1[i] : 0;
+    let b = j >= 0 ? +num2[j] : 0;
+    let sum = a + b + add;
+    // 将每一位添加，十位，百位，千位等，用字符串拼接的方式相加
+    ans = sum % 10 + ans;
+    // 总数除以10之后取整，检查是否有进位
+    add = ~~(sum / 10);
+  }
+
+  // 如果最后一位还有进位的话
+  add && (ans = add + ans);
+  return ans;
+};
+
+/****** 414. Third Maximum Number ******/
+/**
+ * [thirdMax 时间复杂度需要在O(n)内, 即一次遍历内]
+ * @param {number[]} nums
+ * @return {number}
+ */
+// error 有重复的元素的情况则是错的
+var thirdMax = function(nums) {
+  nums.sort(function(a, b) {return b - a;});
+  return nums[2] || nums[0];
+};
+
+// error
+var thirdMax = function(nums) {
+  if (nums.length < 3) {
+    return Math.max.apply(null, nums);
+  }
+
+  var max = Math.max.apply(null, nums),
+    sec = 0,
+    res = [];
+
+  for (var i = 1; i < nums.length; i++) {
+    if (nums[i] < max && nums[i] > sec) {
+      res.push(sec);
+      sec = nums[i];
+    }
+  }
+  return res.length ? Math.max.apply(null, res) : max;
+};
+
+// correct
+// 思路比较清晰，主要是能不能想到
+// 遍历时保存三个最大值的数组
+var thirdMax = function(nums) {
+  let ans = [];
+
+  nums.forEach(function(item) {
+    let len = ans.length;
+    // 保存初始值
+    if (len === 0) {
+      ans.push(item);
+    } else if (len === 1) {
+      // 在栈尾保存比原数组内的值大的值
+      if (item > ans[0]) {
+        ans.push(item);
+      // 在栈首保存较小的值
+      } else if (item < ans[0]) {
+        ans.unshift(item);
+      }
+    } else if (len === 2) {
+      if (item < ans[0]) {
+        ans.unshift(item);
+      } else if (item > ans[0] && item < ans[1]) {
+        // 如果大小在正中则保存在中间
+        ans.splice(1, 0, item);
+      } else if (item > ans[1]) {
+        ans.push(item);
+      }
+    } else if (len === 3) {
+      // 如果有比最小值大的值则移除原最小值
+      if (item > ans[0] && item !== ans[1] && item !== ans[2]) {
+        ans.shift();
+        if (item < ans[0]) {
+          ans.unshift(item);
+        } else if (item > ans[0]  && item < ans[1]) {
+          ans.splice(1, 0, item);
+        } else if (item > ans[1]) {
+          ans.push(item);
+        }
+      }
+    }
+  });
+
+  // 是否存在依次递增的长度为三的数组，否则是取最大值
+  return ans.length === 3 ? ans[0] : ans.pop();
+};
