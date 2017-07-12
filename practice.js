@@ -1129,3 +1129,115 @@ var thirdMax = function(nums) {
   // 是否存在依次递增的长度为三的数组，否则是取最大值
   return ans.length === 3 ? ans[0] : ans.pop();
 };
+
+/****** 412. Fizz Buzz ******/
+/**
+ * [fizzBuzz description]
+ * @param {number} n
+ * @return {string[]}
+ */
+var fizzBuzz = function(n) {
+  var res = [];
+  for (var i = 1; i <= n; i++) {
+    var item = i.toString();
+    if (item % 3 === 0 && item % 5 === 0) {
+      item = 'FizzBuzz';
+    } else if (item % 3 === 0) {
+      item = 'Fizz';
+    } else if (item % 5 === 0) {
+      item = 'Buzz';
+    }
+    res.push(item);
+  }
+  return res;
+};
+
+/*
+  var fizzBuzz = function(n) {
+    let ans = [];
+    for (let i = 1; i <= n; i++) {
+      let str = '';
+      if (i % 3 === 0) {
+        str += 'Fizz';
+      }
+      if (i % 5 === 0) {
+        str += 'Buzz';
+      }
+      if (str === '') {
+        str += i;
+      }
+      ans.push(i);
+    }
+    return ans;
+  };
+*/
+
+/****** 409. Longest Palindrome ******/
+/**
+ * [longestPalindrome description]
+ * @param {string} s
+ * @return {number}
+ */
+// error
+var longestPalindrome = function(s) {
+  var obj = {};
+  var arr = s.split('');
+  var len = 0;
+  var odd = false;
+  arr.forEach(function(item) {
+    if (!obj[item]) {
+      obj[item] = 1;
+    } else {
+      obj[item] += 1;
+    }
+  });
+  for (var item in obj) {
+    if (obj[item] === 1) {
+      odd = true;
+    } else {
+      // 除了判断是否有单个情况外，还需要判断奇数的情况
+      len += obj[item];
+    }
+  }
+  return (len % 2 === 0 && odd) ? ++len : len;
+};
+
+// correct
+var longestPalindrome = function(s) {
+  var obj = {};
+  var arr = s.split('');
+  var len = 0;
+  var odd = false;
+  arr.forEach(function(item) {
+    if (!obj[item]) {
+      obj[item] = 1;
+    } else {
+      obj[item] += 1;
+    }
+  });
+  for (var item in obj) {
+    // 重点是需要判断奇数的情况
+    len += (obj[item] & 1) ? obj[item] - 1 : obj[item];
+    (obj[item] & 1) && (odd = true);
+  }
+  return len + odd;
+};
+
+// correct
+var longestPalindrome = function(s) {
+  let hash = {};
+
+  for (let item of s)
+    hash[item] = ~~hash[item] + 1;
+
+  let exsitsOld = false;
+  let ans = 0;
+  for (let key in hash) {
+    let cnt = hash[key];
+    // 按位与 这是重点，当且仅当前一个数为奇数时(即 cnt 为奇数时)，才输出1(即默认 true)
+    ans += cnt & 1 ? cnt - 1 : cnt;
+    (cnt & 1) && (exsitsOld = true);
+  }
+
+  return ans + exsitsOld;
+};
