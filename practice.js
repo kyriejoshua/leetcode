@@ -1250,3 +1250,89 @@ var longestPalindrome = function(s) {
   123 & 1 => 1111011 0000001 => 1
   12 & 1 => 1100 0001 => 0
  */
+
+/****** 405. Convert a Number to Hexadecimal ******/
+/**
+ * @param {number} num
+ * @return {string}
+ */
+// correct 但算法复杂度太高……忧伤
+var toHex = function(num) {
+  // 正整数直接调用 api
+  if (num >= 0) {
+    return num.toString(16);
+  }
+  var str = '';
+  // 映射表
+  var obj = {
+    a: 10,
+    b: 11,
+    c: 12,
+    d: 13,
+    e: 14,
+    f: 15,
+    10: 'a',
+    11: 'b',
+    12: 'c',
+    13: 'd',
+    14: 'e',
+    15: 'f'
+  };
+  var n = (Math.abs(num)).toString(16);
+  // 是否进位
+  var isHex = false;
+  // 八位整数
+  if (n.length < 8) {
+    for (var i = 1, len = (8 - n.length); i <= len; i++) {
+      n = '0' + n;
+    }
+  }
+  // 补位
+  for (var j = 0; j < n.length; j++) {
+    var v = n[j];
+    var item = (v < 10) ? (15 - v) : (15 - obj[v]);
+    (j === n.length -1) && (item++);
+    (j === n.length -1) && (item === 16) && (isHex = true ) && (item = 0);
+    str += (item < 10) ? item : obj[item];
+  }
+  // 进位
+  for (var k = n.length - 2; k >= 0; k--) {
+    if (!isHex) break;
+    // 是否要进位，是否是用字母表示
+    var temp = (str[k] === 'f') ? 0 : (str[k] < 10) ? ++str[k] : obj[str[k]];
+    temp = temp >= 10 ? obj[++temp] : temp;
+    temp && (isHex = false);
+    // 进位后重新拼接
+    str = str.slice(0, k) + temp + str.slice(k+1);
+  }
+
+  return str;
+};
+
+/* 待理解
+  var toHex = function(num) {
+    if (num > 0) {
+      return help(num);
+    } else if (num === 0) {
+      return '0';
+    } else {
+      num = -num;
+      // 待理解
+      return help(0xffffffff - num + 1);
+    }
+
+    function help(num) {
+      let arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+      let ans = '';
+
+      // 不断除以16
+      while (num) {
+        let mod = num % 16;
+        ans = arr[mod] + ans;
+        num = ~~(num / 16);
+      }
+
+      return ans;
+    }
+  }
+*/
