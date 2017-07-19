@@ -1336,3 +1336,86 @@ var toHex = function(num) {
     }
   }
 */
+
+/****** 404. Sum of Left Leaves ******/
+// lack
+
+/****** 401. Binary Watch ******/
+// lack
+
+/****** 400. Nth Digit   ******/
+// lack
+
+/****** 389. Find the Difference ******/
+/**
+ * [findTheDifference description]
+ * @param {string} s
+ * @param {string} t
+ * @return {character}
+ */
+// error 因为字母出现次数不唯一，所以错误
+var findTheDifference = function(s, t) {
+  var obj = {};
+  for (var i = 0; i < s.length; i++) {
+    obj[s[i]] = ~~obj[s[i]] + 1;
+  }
+
+  for (var j = 0; j < t.length; j++) {
+    if (!obj[t[j]]){ return t[j]; }
+  }
+};
+
+// error 因为是无序的，所以错误
+var findTheDifference = function(s, t) {
+  for (var j = 0; j < t.length; j++) {
+    if (s.indexOf(t[j])) {return t[j];}
+    s = s.substr(1);
+  }
+};
+
+// correct 但算法复杂度较高
+var findTheDifference = function(s, t) {
+  var obj = {};
+  var obj2 = {};
+  for (var i = 0; i < s.length; i++) {
+    obj[s[i]] = ~~obj[s[i]] + 1;
+  }
+
+  for (var j = 0; j < t.length; j++) {
+    obj2[t[j]] = ~~obj2[t[j]] + 1;
+  }
+
+  for (var key in obj2) {
+    if (obj2[key] === (~~obj[key]) + 1) {
+      return key;
+    }
+  }
+};
+
+// correct 推荐答案也较复杂，运行较长
+var findTheDifference = function(s, t) {
+  var arr = s.split('').sort();
+  var arr2 = t.split('').sort();
+
+  for (var i = 0; i < arr2.length; i++) {
+    if (arr2[i] !== arr[i]) { return arr2[i]; }
+  }
+};
+
+// correct 较优解
+// 按位异或
+// 0 0 => 0
+// 0 1 => 1
+// 0 1 => 1
+// 1 1 => 0
+// 待理解
+var findTheDifference = function(s, t) {
+  var n = 0;
+  for (var i = 0; i < s.length; i++) {
+    n ^= s.charCodeAt(i);
+  }
+  for (var j = 0; j < t.length; j++) {
+    n ^= t.charCodeAt(j);
+  }
+  return String.fromCharCode(n);
+};
