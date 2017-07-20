@@ -1419,3 +1419,88 @@ var findTheDifference = function(s, t) {
   }
   return String.fromCharCode(n);
 };
+
+/****** 387. First Unique Character in a String ******/
+/**
+ * [firstUniqChar description]
+ * @param {string} s
+ * @return {number}
+ */
+// error 不推荐在 for 循环里调用函数
+var firstUniqChar = function(s) {
+  var arr = [];
+  for (var i = 0; i < s.length; i++) {
+    var key = s[i];
+    var isIn = false;
+    arr = arr.map(function(o) {
+      if (o && o.value === key) {
+        isIn = true;
+        o.sum = ~~o.sum + 1;
+      }
+      return o; // 必须要 return
+    })
+    if (!isIn) {
+      arr.push({
+        value: key,
+        sum: 1,
+        index: i
+      })
+    }
+  }
+
+  // 字母总数从小到大排序，这一步多余了
+  arr.sort(function(a, b) { return a.sum - b.sum; });
+
+  // 如果最小值不是唯一
+  if (arr[0].sum !== 1) { return -1; }
+
+  // 对所有结果为一的排序
+  var res = arr.filter(function(item) {
+    return item.sum === 1;
+  });
+  res.sort(function(a, b) { return a.index - b.index; });
+  return res[0].index;
+};
+
+// correct
+var firstUniqChar = function(s) {
+  var arr = [];
+  for (var i = 0; i < s.length; i++) {
+    var key = s[i];
+    var n = -1;
+    for (var j = 0, len = arr.length; j < len; j++) {
+      if (arr[j] && arr[j].value === key) {
+        arr[j].isUnique = false;
+        n = j;
+      }
+    }
+    if (n === -1) {
+      arr.push({
+        value: key,
+        index: i,
+        isUnique: true
+      });
+    }
+  }
+
+  var res = arr.filter(function(item) {
+    return item.isUnique;
+  });
+
+  if (!res.length) { return -1; }
+
+  res.sort(function(a, b) { return a.index - b.index; })
+  return res[0].index;
+};
+
+// correct 官方解，方便好多……
+var firstUniqChar = function(s) {
+  for (var i = 0; i < s.length; i++) {
+    var item = s[i];
+    if (s.lastIndexOf(item) === s.indexOf(item)) {
+      return i;
+    }
+  }
+
+  return -1;
+};
