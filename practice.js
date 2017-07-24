@@ -1504,3 +1504,72 @@ var firstUniqChar = function(s) {
 
   return -1;
 };
+
+/****** 383. Ransom Note ******/
+/**
+ * [canConstruct 第二个字符串里的字符可以组成第一个字符串]
+ * @param {string} ransomNote
+ * @param {string} magazine
+ * @return {boolean}
+ */
+// error 并不是有序的，所以这里错了
+var canConstruct = function(ransomNote, magazine) {
+  var num = 0;
+  for (var i = 0; i < ransomNote.length; i++) {
+    var s = ransomNote[i];
+    var m = magazine.substr(num);
+    var index = m.indexOf(s);
+    if (index === -1) return false;
+    num = index + 1;
+
+  }
+  return true;
+};
+
+// correct 运算速率较快，击败了三分之二的选手
+var canConstruct = function(ransomNote, magazine) {
+  var obj = {};
+  var mobj = {};
+  for (var i = 0; i < ransomNote.length; i++) {
+    var key = ransomNote[i];
+    obj[key] = ~~obj[key] + 1;
+  }
+  for (var j = 0; j < magazine.length; j++) {
+    var props = magazine[j];
+    mobj[props] = ~~mobj[props] + 1;
+  }
+  for (var p in obj) {
+    // 2 > undifined => false, 所以这里要取整
+    mobj[p] = ~~mobj[p];
+    if (obj[p] > mobj[p]) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/*
+  var canConstruct = function(ransomNote, magazine) {
+    var hash = {};
+
+    for (var i = 0; i < ransomNote.length; i++) {
+      var item = ransomNote[i];
+
+      for (var j = 0, len = magazine.length; j < len; j++) {
+        // 循环直到找到当前字符串
+        if (hash[j] || magazine[j] !== item) {
+          continue;
+        }
+        hash[j] = true;
+        break;
+      }
+
+      // 假如没有找到当前字符
+      if (j === len) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+*/
