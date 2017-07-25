@@ -1438,13 +1438,13 @@ var firstUniqChar = function(s) {
         o.sum = ~~o.sum + 1;
       }
       return o; // 必须要 return
-    })
+    });
     if (!isIn) {
       arr.push({
         value: key,
         sum: 1,
         index: i
-      })
+      });
     }
   }
 
@@ -1489,7 +1489,7 @@ var firstUniqChar = function(s) {
 
   if (!res.length) { return -1; }
 
-  res.sort(function(a, b) { return a.index - b.index; })
+  res.sort(function(a, b) { return a.index - b.index; });
   return res[0].index;
 };
 
@@ -1573,3 +1573,119 @@ var canConstruct = function(ransomNote, magazine) {
     return true;
   }
 */
+
+/****** 371. Sum of Two Integers ******/
+// lack
+
+/****** 367. Valid Perfect Square ******/
+/**
+ * [isPerfectSquare description]
+ * @param {number} num
+ * @return {boolean}
+ */
+// error timeout
+var isPerfectSquare = function(num) {
+  for (var i = 0; i <= num; i++) {
+    if (i * i === num) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// error timeout
+var isPerfectSquare = function(num) {
+  if (num === 1 || num === 4) { return true; }
+  for (var i = 0, half = ~~(num/2); i <= half; i++) {
+    if (i * i === num) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/* correct
+  二分法的思路
+  var isPerfectSquare = function(num) {
+    var a = 0;
+    var b = num;
+
+    while (a <= b) {
+      var mid = (a + b) >> 1;
+      var ans = mid * mid;
+
+      if (ans > num) {
+        b = mid - 1;
+      } else if (ans < num) {
+        a = mid + 1;
+      } else {
+        return true;
+      }
+    }
+
+    return false;
+  }
+ */
+
+/****** 349. Intersection of Two Arrays II ******/
+/**
+ * [intersection description]
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+// correct 算法复杂度很高 Your runtime beats 2 % of javascript submissions.
+var intersection = function(nums1, nums2) {
+  var arr = [];
+  var arr1 = (nums1.length > nums2.length) ? nums1 : nums2;
+  var arr2 = (arr1 === nums1)? nums2 : nums1;
+  var num = -1;
+  arr1.forEach(function(item) {
+    arr2.forEach(function(value, index) {
+      if (value === item) {
+        num = index;
+        arr.push(value);
+      }
+    });
+    if (num !== -1) {
+      arr2.splice(num, 1);
+      num = -1;
+    }
+  });
+
+  var res = arr.filter(function(value, index) {
+    return arr.indexOf(value) === index;
+    // 注意这里不是 lastIndexOf
+    // return arr.indexOf(value) === arr.lastIndexOf(value);
+  });
+
+  return res;
+};
+
+/****** 350. Intersection of Two Arrays II ******/
+/**
+ * [intersect description]
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+// correct Your runtime beats 92.13 % of javascript submissions.
+var intersect = function (nums1, nums2) {
+  var obj = {};
+  var res = [];
+  var arr = (nums1.length > nums2.length)? nums1 : nums2;
+  var arr2 = (arr === nums1)? nums2 : nums1;
+  for (var i = 0; i < arr.length; i++) {
+    var key = arr[i];
+    obj[key] = ~~obj[key] + 1;
+  }
+  for (var j = 0; j < arr2.length; j++) {
+    var props = arr2[j];
+    if (obj[props]) {
+      res.push(props);
+      obj[props] = obj[props] - 1;
+    }
+  }
+
+  return res;
+};
