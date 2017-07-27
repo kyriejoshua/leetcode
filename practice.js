@@ -1689,3 +1689,85 @@ var intersect = function (nums1, nums2) {
 
   return res;
 };
+
+/****** 345. Reverse Vowels of a String ******/
+/**
+ * [reverseVowels description]
+ * @param {string} s
+ * @return {string}
+ */
+// error 字母表不全，未包括大写，算法对长度小的字符串不生效
+var reverseVowels = function(s) {
+  // 元音字母表
+  var obj = {
+    a: 1,
+    e: 1,
+    i: 1,
+    o: 1,
+    u: 1
+  };
+  var num = 0;
+  for (var n = 0; n < s.length; n++) {
+    if (obj[s[n]]) {num++;}
+  }
+  if (num <= 1) {
+    return s;
+  }
+  var half = ~~(s.length/2);
+  var startHalf = [];
+  var endHalf = [];
+  var res = s.split('');
+  var len = (res.length % 2 === 0) ? (half + 1) : (half + 2);
+  // 保存需要替换的元音
+  for (var i = 0; i <= half; i++) {
+    var key = s[i];
+    obj[key] && startHalf.push(key);
+  }
+  // 替换后半部分元音
+  for (var j = s.length - 1; j >= len; j--) {
+    var p = s[j];
+    if (obj[p]) {
+      var v = startHalf.shift();
+      endHalf.unshift(p);
+      res.splice(j, 1, v);
+    }
+  }
+  // 替换前半部分元音
+  for (var k = 0; k <= half; k++) {
+    var props = s[k];
+    if (obj[props]) {
+      var w = endHalf.pop();
+      res.splice(k, 1, w);
+    }
+  }
+
+  return res.join('');
+};
+
+// correct
+var reverseVowels = function(s) {
+  // 元音字母表
+  var vowelsStr = 'aeiouAEIOU';
+  var arr = s.split('');
+  var vowelsArr = [];
+  var str = '';
+  var index = 0;
+
+  for (var i = 0; i < s.length; i++) {
+    if (vowelsStr.indexOf(s[i]) !== -1) {
+      vowelsArr.push(s[i]);
+    }
+  }
+  // 元音顺序倒序
+  vowelsArr.reverse();
+  // 字符串相加，是元音则添加元音，否则添加原有字符
+  for (var j = 0; j < arr.length; j++) {
+    if (vowelsStr.indexOf(arr[j]) === -1) {
+      str += arr[j];
+    } else {
+      // 这里的 index++ 使得数组也推进了
+      str += vowelsArr[index++];
+    }
+  }
+  return str;
+};
