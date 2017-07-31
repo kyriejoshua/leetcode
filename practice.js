@@ -1771,3 +1771,70 @@ var reverseVowels = function(s) {
   }
   return str;
 };
+
+/****** 344. Reverse String ******/
+/**
+ * [reverseString description]
+ * @param {string} s
+ * @return {string}
+ */
+// correct 最好再判断为 null 的情况
+var reverseString = function(s) {
+  var arr = s.split('');
+  return arr.reverse().join('');
+};
+
+/****** 342. Power of Four ******/
+/**
+ * @param {number} num
+ * @return {boolean}
+ */
+// error
+var isPowerOfFour = function(num) {
+  if (!num) { return false; }
+  if (num === 1 || num === 4) { return true; }
+  var n = Math.sqrt(num);
+  if ((n % 4) !== 0) { return false; }
+  return true;
+};
+
+// error
+var isPowerOfFour = function(num) {
+  var base = 4;
+  var log = Math.log(num) / Math.log(base);
+  return log.toString().indexOf('.') === -1;
+};
+
+// correct 运算速度不是最快的，较为简便，不使用循环或递归的方式
+var isPowerOfFour = function (num) {
+  // 对 0 无效
+  if (!num) { return false; }
+  // 首先获取以 x 为底 y 的对数(即 logx y)
+  var a = Math.log(num) / Math.log(4);
+  // 再使用结果去乘幂，检验结果是否匹配
+  // 但这里为什么要取整？
+  return Math.pow(4, Math.floor(a)) === num || Math.pow(4, Math.ceil(a)) === num;
+};
+
+// correct 思路清晰，运算较快
+var isPowerOfFour = function (num) {
+  if (num === 1) {
+    return true;
+  } else if (num === 0) {
+    return false;
+  } else {
+    // 不断相除
+    while (num % 4 === 0) {
+      num = num / 4;
+      if (num === 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+};
+
+// correct 开拓思路，转化成 2 进制再使用正则匹配
+var isPowerOfFour = function(num) {
+  return /^1(00)*$/.test(num.toString(2));
+};
