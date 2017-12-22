@@ -1838,3 +1838,101 @@ var isPowerOfFour = function (num) {
 var isPowerOfFour = function(num) {
   return /^1(00)*$/.test(num.toString(2));
 };
+
+/**
+ * 一道有趣的算法题
+ * 将一个二维数组数据转化为树状结构的数据格式
+ * 已知二维数组内的前一个数组为后一个数组的父节点，而且索引一一对应
+ * 树状结构最终为:
+ * [
+ *   { name: '', children: [] },
+ *   { name: '', children: [
+ *     { name: '', children: [
+ *       { name: '', children: []}
+ *     ]}
+ *   ] }
+ * ]
+ * 二维数据如下:
+ */
+
+// 模拟数据
+const data = [
+  ['浙江', '江苏', '浙江', '上海', '江苏'],
+  ['宁波', '南京', '杭州', null, '南京'],
+  [null, '玄武', '西湖', null, '鼓楼'],
+  [null, null, '天堂', null, null]
+];
+
+/**
+ * [addChildren 新增节点，直接修改原数组]
+ * @param {Array} arr   [description]
+ * @param {String} name  [description]
+ */
+function addChildren(arr, name) {
+  arr.push({ name, children: [] });
+}
+
+function isIncluded(arr, name) {
+  return arr.find((item) => {
+    return item.name === name;
+  });
+}
+
+/**
+ * [getCurrent 遍历所有节点，获取当前父节点]
+ * @param  {Array} arr  [description]
+ * @param  {String} name [description]
+ */
+function getCurrent(arr, name, current) {
+  let i = 0;
+  while (arr[i]) {
+    let item = arr[i];
+    i++;
+    if (item.name === name) {
+      current.data = item;
+    } else if (item.children.length > 0) {
+      getCurrent(item.children, name, current);
+    } else {
+      continue;
+    }
+  }
+}
+
+/**
+ * [transformData 将二维数组数据转化为树状结构]
+ * @param  {Array} data [[[], [], []]]
+ * @return {Array}      [[{}]]
+ */
+function transformData(data) {
+  let res = []; // 保存结果
+  let current = {}; // 用于保存当前的父节点
+
+  data[0].map((item, index) => {
+    let level = 1; // 数组的层级
+    let currentArr = data[level]; // 当前遍历数组
+    !isIncluded(res, item) && addChildren(res, item);
+
+    while (currentArr) {
+      // 当前的值
+      const child = currentArr[index];
+      if (child) {
+        // 父节点值
+        const parent = data[level - 1][index];
+        getCurrent(res, parent, current);
+        !isIncluded(current.data.children, child) && addChildren(current.data.children, child);
+      }
+      level++;
+      currentArr = data[level];
+    }
+  });
+
+  console.info(JSON.stringify(res));
+  return res;
+}
+
+transformData(data);
+
+/**
+ * 这里利用了引用类型修改值会直接改最终值的特点
+ * TO BE BETTER：不使用引用类型直接修改的特点，递归逻辑优化
+ */
