@@ -1936,3 +1936,66 @@ transformData(data);
  * 这里利用了引用类型修改值会直接改最终值的特点
  * TO BE BETTER：不使用引用类型直接修改的特点，递归逻辑优化
  */
+
+/**
+ * 一个小更新，如果要给每个树的根节点赋值，已知值为一数组，里面按顺序传入
+ * 例如，上面这个案例有五个节点，传入的数据为 [123, 29, 62, 90, 204]
+ * 简易的方案是重新递归一遍赋值
+ */
+const values = [123, 29, 62, 90, 204];
+
+/**
+ * @param {Array} res
+ * @param {Array} data
+ * @param {Object} current
+ */
+function setCurrentValue(res, data, current) {
+  let i = 0;
+  while(res[i]) {
+    const item = res[i];
+    i++;
+    if (item.children.length) {
+      setCurrentValue(item.children, data, current);
+    } else {
+      item.value = data[current.count];
+      current.count++;
+    }
+  }
+}
+
+/**
+ * 更新后的方法为
+ */
+function transformDataWithValue(data, values) {
+  let res = []; // 保存结果
+  let current = { count: 0 }; // 用于保存当前的父节点和索引值
+
+  data[0].map((item, index) => {
+    let level = 1; // 数组的层级
+    let currentArr = data[level]; // 当前遍历数组
+    !isIncluded(res, item) && addChildren(res, item);
+
+    while (currentArr) {
+      // 当前的值
+      const child = currentArr[index];
+      if (child) {
+        // 父节点值
+        const parent = data[level - 1][index];
+        getCurrent(res, parent, current);
+        !isIncluded(current.data.children, child) && addChildren(current.data.children, child);
+      }
+      level++;
+      currentArr = data[level];
+    }
+  });
+
+  setCurrentValue(res, values, current);
+  console.info(JSON.stringify(res));
+  return res;
+}
+
+transformDataWithValue(data, values);
+
+/**
+ * 更好的方案是在首次递归时赋值，这个后续再考虑考虑~
+ */
