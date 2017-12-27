@@ -1971,6 +1971,7 @@ function transformDataWithValue(data, values) {
   let current = { count: 0 }; // 用于保存当前的父节点和索引值
 
   data[0].map((item, index) => {
+    if (!item) { return; }
     let level = 1; // 数组的层级
     let currentArr = data[level]; // 当前遍历数组
     !isIncluded(res, item) && addChildren(res, item);
