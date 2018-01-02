@@ -2000,3 +2000,23 @@ transformDataWithValue(data, values);
 /**
  * 更好的方案是在首次递归时赋值，这个后续再考虑考虑~
  */
+
+const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+/**
+ * 将有序数组转化成随机数组，自己的实现
+ * @param {Array} arr
+ */
+function randomArr(arr) {
+  let res = [];
+  const len = arr.length;
+  for (let index = len; index >= 0; index--) {
+    // index 递减，且从余下的数组里取值，所以不会重复
+    const random = Math.floor(Math.random() * index);
+    // 返回的是数组，需要来次拼接得到字符串类型
+    const element = arr.splice(random, 1).join('');
+    // 字符串类型转换回数字
+    element !== '' && res.push(Number(element));
+  }
+  return res;
+}
+randomArr(arr);
