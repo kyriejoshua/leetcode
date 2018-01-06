@@ -2009,7 +2009,7 @@ const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 function randomArr(arr) {
   let res = [];
   const len = arr.length;
-  for (let index = len; index >= 0; index--) {
+  for (let index = len - 1; index >= 0; index--) {
     // index 递减，且从余下的数组里取值，所以不会重复
     const random = Math.floor(Math.random() * index);
     // 返回的是数组，需要来次拼接得到字符串类型
@@ -2020,3 +2020,19 @@ function randomArr(arr) {
   return res;
 }
 randomArr(arr);
+
+/**
+ * 复杂度优化版本
+ * @param {Array} arr
+ */
+function randomArrPlus(arr) {
+  const len = arr.length;
+  for (let index = len - 1; index >= 0; index--) {
+    const random = Math.floor(Math.random() * len);
+    const temp = arr[random];
+    arr[random] = arr[index];
+    arr[index] = temp;
+  }
+  return arr;
+}
+randomArrPlus([0, 1, 2, 3, 4, 5, 6, 7, 8]);
