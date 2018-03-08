@@ -2036,3 +2036,60 @@ function randomArrPlus(arr) {
   return arr;
 }
 randomArrPlus([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+
+/* 二叉树反序
+    a
+   / \
+  b   c
+ / \   \
+d   e   f
+
+    a
+   / \
+  c   b
+ /   / \
+f   e   d
+*/
+var a = { value: 'a', left: null, right: null };
+var b = { value: 'b', left: null, right: null };
+var c = { value: 'c', left: null, right: null };
+var d = { value: 'd', left: null, right: null };
+var e = { value: 'e', left: null, right: null };
+var f = { value: 'f', left: null, right: null };
+a.left = b;
+a.right = c;
+b.left = d;
+b.right = e;
+c.right = f;
+
+// bad idea but useful
+function walkTree(root, current) {
+  var obj = current ? current : root;
+  if (obj.left || obj.right) {
+    var temp = obj.left;
+    obj.left = obj.right;
+    obj.right = temp;
+    walkTree(root, obj.left);
+  } else {
+    // 一侧或者两侧已经遍历完的情况
+    if (!this.shouldStop) {
+      this.shouldStop = true;
+      walkTree(root, root.right);
+    } else {
+      console.info(JSON.stringify(root, null, 2));
+    }
+  }
+}
+
+// better idea
+function walkTree(root) {
+  if (root.left || root.right) {
+    var temp = root.left;
+    root.left = root.right;
+    root.right = temp;
+    root.left && walkTree(root.left);
+    root.right && walkTree(root.right);
+  }
+  console.info(JSON.stringify(root, null, 2));
+}
+walkTree(a);
