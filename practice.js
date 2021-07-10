@@ -1627,6 +1627,25 @@ var isPerfectSquare = function(num) {
   }
  */
 
+/**
+ * correct 自己实现的 效率不高
+ * @param {number} num
+ * @return {boolean}
+ */
+var isPerfectSquare = function(num) {
+  if (num === 1) return true;
+    let b = parseInt(num / 2);
+    while (b >= 1 ) {
+      const s = b * b;
+      if (s === num) {
+        return true;
+      }
+      b -= 1;
+    }
+
+    return false;
+};
+
 /****** 349. Intersection of Two Arrays II ******/
 /**
  * [intersection description]
@@ -2093,3 +2112,90 @@ function walkTree(root) {
   console.info(JSON.stringify(root, null, 2));
 }
 walkTree(a);
+
+// 26. 删除有序数组中的重复项
+/**
+ * 能跑但效率不高
+ * @param {*} nums
+ * @returns
+ */
+var removeDuplicates = function(nums) {
+  let i = 0;
+  while (i < nums.length - 1) {
+    if (nums[i] === nums[i+1]) {
+      nums.splice(i + 1, 1);
+      console.info(nums, 'nums');
+    } else {
+      i++;
+    }
+  }
+  return nums.length;
+};
+removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]);
+
+// 58. 最后一个单词的长度
+/**
+ * 超过了中文站 95% 的用户
+ * 英文站表现一般
+ * @param {*} s
+ * @returns
+ */
+var lengthOfLastWord = function(s) {
+  let arr = s.split(' ');
+  let lastWord = arr[arr.length - 1];
+  if (!lastWord) {
+    let i = arr.length - 2;
+    while (i >= 0) {
+      if (arr[i]) {
+        lastWord = arr[i];
+        return lastWord.length
+      }
+      i--;
+    }
+  }
+  return lastWord.length;
+};
+
+// 628 三个数的最大乘积
+/**
+ * 取出数组中三个乘积最大的结果
+ * 先排序得到从大到小的有序数组，接着排列组合有三种场景，包括负值的情况
+ * 比较这三种场景的结果
+ * 能跑但效率不高
+ * @param {*} nums
+ * @returns
+ */
+var maximumProduct = function(nums) {
+  const len = nums.length;
+  if (len === 3) {
+    return nums[0] * nums[1] * nums[2];
+  }
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = 0; j < len - i - 1; j++) {
+      if (nums[j] < nums[j + 1]) {
+        [nums[j+1], nums[j]] = [nums[j], nums[j+1]];
+      }
+    }
+  }
+  console.info(nums);
+
+  return Math.max(nums[0] * nums[1] * nums[2],
+    nums[len - 1] * nums[len - 2] * nums[len - 3],
+    nums[len - 1] * nums[len - 2] * nums[0]);
+};
+
+/**
+ * 排序实现换了一下,比上面效率稍好一些
+ * @param {*} nums
+ * @returns
+ */
+var maximumProductBetter = function(nums) {
+  if (nums.length === 3) {
+    return nums[nums.length-1] * nums[nums.length-2] * nums[nums.length-3];
+  }
+  const res = nums.sort(function(a, b) { return a - b ;});
+  const last = res[res.length-1] * res[res.length-2] * res[res.length-3];
+  const first = res[0] * res[1] * res[res.length-1];
+  const begin = nums[0] * nums[1] * nums[2];
+  return Math.max(last, first, begin);
+};
