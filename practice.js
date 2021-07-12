@@ -2082,18 +2082,18 @@ b.right = e;
 c.right = f;
 
 // bad idea but useful
-function walkTree(root, current) {
+function walkTreeA(root, current) {
   var obj = current ? current : root;
   if (obj.left || obj.right) {
     var temp = obj.left;
     obj.left = obj.right;
     obj.right = temp;
-    walkTree(root, obj.left);
+    walkTreeA(root, obj.left);
   } else {
     // 一侧或者两侧已经遍历完的情况
     if (!this.shouldStop) {
       this.shouldStop = true;
-      walkTree(root, root.right);
+      walkTreeA(root, root.right);
     } else {
       console.info(JSON.stringify(root, null, 2));
     }
