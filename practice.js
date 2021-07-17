@@ -2113,6 +2113,60 @@ function walkTree(root) {
 }
 walkTree(a);
 
+/*
+ * @lc app=leetcode id=20 lang=javascript
+ *
+ * [20] Valid Parentheses
+ */
+
+// @lc code=start
+/**
+ * better correct
+ * @param {string} s
+ * @return {boolean}
+ */
+ var isValid = function(s) {
+  const len = s.length;
+  if (len % 2 === 1 || len === 0) {
+    return false;
+  }
+  const pairs = new Map([
+    ['}', '{'],
+    [']', '['],
+    [')', '(']
+  ]);
+  let stk = [];
+  for (const left of s) {
+    if (pairs.has(left)) {
+      if (!stk.length || stk[stk.length - 1] !== pairs.get(left)) {
+        return false;
+      }
+      stk.pop();
+    } else {
+      stk.push(left)
+    }
+  }
+  return !stk.length;
+};
+/**
+ * 截取完整的
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid2 = function(s) {
+  const len = s.length;
+  if (len % 2 === 1 || len === 0) {
+    return false;
+  }
+  let str = s;
+  while (str.includes('{}') || str.includes('()') || str.includes('[]')) {
+    const index = str.indexOf('{}') !== -1 ? str.indexOf('{}') : str.indexOf('[]') !== -1 ? str.indexOf('[]') : str.indexOf('()');
+    str = str.slice(0, index) + str.slice(index + 2);
+  }
+
+  return !str.length;
+};
+
 // 26. 删除有序数组中的重复项
 /**
  * 能跑但效率不高
@@ -2132,6 +2186,68 @@ var removeDuplicates = function(nums) {
   return nums.length;
 };
 removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]);
+
+/*
+ * @lc app=leetcode id=27 lang=javascript
+ *
+ * [27] Remove Element
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @param {number} val
+ * @return {number}
+ */
+ var removeElement = function(nums, val) {
+  if (!nums.includes(val)) return nums.length;
+  let i = 0;
+  while (nums[i] || nums[i] === 0) {
+    if (nums[i] === val) {
+      nums.splice(i, 1);
+    } else {
+      i++;
+    }
+  }
+  return nums.length;
+};
+
+/*
+ * @lc app=leetcode id=28 lang=javascript
+ *
+ * [28] Implement strStr()
+ */
+
+// @lc code=start
+/**
+ * @param {string} haystack
+ * @param {string} needle
+ * @return {number}
+ */
+ var strStr = function(haystack, needle) {
+  const h = haystack.length, n = needle.length
+  for (let i = 0; i + n <= h; i++) {
+    let flag = true;
+    for (let j = 0; j < n; j++) {
+      if (haystack[i + j] !== needle[j]) {
+        flag = false;
+        break;
+      }
+    }
+    if (flag) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+var strStr2 = function(haystack, needle) {
+  if (!needle) { return 0; }
+  return haystack.indexOf(needle);
+};
+
+strStr('hello', 'll');
 
 // 58. 最后一个单词的长度
 /**
